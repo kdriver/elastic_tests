@@ -1,0 +1,48 @@
+    [ {
+        "audit_type": "STIG Compliance",
+        "check": "Review the network devices configuration to determine if administrative access to the device requires some form of authentication--at a minimum a password is required.\n\nIf passwords aren't used to administrative access to the device, this is a finding.",
+        "date_time": "Mon Nov 4 15:36:56 2019",
+        "description": "Network access control mechanisms interoperate to prevent unauthorized access and to enforce the organization's security policy. Access to the network must be categorized as administrator, user, or guest so the appropriate authorization can be assigned to the user requesting access to the network or a network device. Authorization requires an individual account identifier that has been approved, assigned, and configured on an authentication server. Authentication of user identities is accomplished through the use of passwords, tokens, biometrics, or in the case of multi-factor authentication, some combination thereof. Lack of authentication enables anyone to gain access to the network or possibly a network device providing opportunity for intruders to compromise resources within the network infrastructure.",
+        "device": {
+            "collection_ip": "",
+            "filename": "1.txt",
+            "hostname": "Office-Cisco-Catalyst_1",
+            "manufacturer": "Cisco",
+            "model": "Catalyst Switch",
+            "operating_system": {
+                "name": "IOS",
+                "version": "12.1"
+            }
+        },
+        "finding_id": "V-3012",
+        "findings": {
+            "Office-Cisco-Catalyst_1": {
+                "finding 1": {
+                    "Table 0 details the administrative interface lines configured on Office-Cisco-Catalyst_1.": "<table> <thead> <tr> <th>Line</th> <th>Access</th> <th>Login</th> <th>Level</th> <th>Password</th> <th>Authorization</th> <th>Accounting</th> <th>Filter In</th> </tr> </thead> <tbody> <tr><td>Console</td><td>Yes</td><td>No Authentication</td><td>1</td><td></td><td>Off</td><td>Off</td><td></td></tr> <tr class=\"evenrow\"><td><span title=\"Virtual Teletype\">VTY</span> 0 - 4</td><td>Yes</td><td>Local Users</td><td>1</td><td>password</td><td>Off</td><td>Off</td><td></td></tr> <tr><td><span title=\"Virtual Teletype\">VTY</span> 5 - 15</td><td>Yes</td><td>Local Users</td><td>1</td><td>password</td><td>Off</td><td>Off</td><td></td></tr> </tbody></table>&nbsp;<br />"
+                },
+                "finding 2": {
+                    "Table 0 details local users configured on Office-Cisco-Catalyst_1.": "<table> <thead> <tr> <th>User</th> <th>Password</th> <th>Privilege</th> <th>Filter</th> </tr> </thead> <tbody> <tr><td>admin</td><td>password</td><td>15</td><td></td></tr> <tr class=\"evenrow\"><td>charles</td><td>password</td><td>15</td><td>1</td></tr> <tr><td>zoe</td><td>password</td><td>12</td><td>1</td></tr> </tbody></table>&nbsp;<br />"
+                }
+            }
+        },
+        "fix": "Configure the network devices so it will require a password to gain administrative access to the device.",
+        "ia_controls": [
+            ""
+        ],
+        "manual": "false",
+        "message_level": "Critical",
+        "message_type": "Compliance Test Fail",
+        "product": "nipper",
+        "responsibility": "Information Assurance Officer",
+        "rule_id": "SV-3012r4_rule",
+        "severity": "CAT I",
+        "stig": {
+            "date": "2018-11-28",
+            "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_L3_Switch_Cisco_STIG_V8R32_Manual-xccdf.xml",
+            "name": "Perimeter L3 Switch Security Technical Implementation Guide - Cisco"
+        },
+        "summary": "Network devices must be password protected.",
+        "title": "Network element is not password protected.",
+        "version": "NET0230"
+    }
+]

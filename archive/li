@@ -1,0 +1,55 @@
+import requests,os,json,time
+from elasticsearch import Elasticsearch
+
+directory='.'
+
+res = requests.get('http://localhost:9200')
+print(res.content,end='\n')
+
+es = Elasticsearch([{'host':'localhost','port':'9200'}])
+response = es.indices.delete(index='nipper',ignore=[400,404])
+print(response)
+
+settings= {
+	"settings": {
+		"number_of_shards" : 1,
+		"number_of_replicas" : 0
+	},
+	"mappings": {
+		"_doc" : {
+			"properties" : {
+				"date_time" : { "type" : "date", 
+						"format" :    "EEE MMM dd HH:mm:ss yyyy" ,
+				"findings.CiscoIOS15.finding 2" : "string",
+				"findings.CiscoIOS15.finding 1" : "string"
+				} 
+			}
+		}
+	}
+}
+settings1= {
+	"settings": {
+		"number_of_shards" : 1,
+		"number_of_replicas" : 0
+	}
+}
+
+response = es.indices.create(index='nipper',ignore=400, body=settings1)
+print(response)
+
+
+i =1
+
+for filename in os.listdir(directory):
+	if filename.endswith('.json'):
+		with open(filename) as fn:
+			print(filename)
+			for line in fn:
+				js=json.loads(line)
+				if 'findings' in js:
+					js['findings'] = {}
+				response = es.index(index='nipper',ignore=400,doc_type='report',id=i,body=js)
+				i = i + 1
+				print(response)
+print("\ndone")
+

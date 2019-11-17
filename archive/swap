@@ -1,0 +1,10 @@
+if [ "$HTTP_PROXY" ] 
+then
+echo "UNSET"
+unset HTTP_PROXY
+unset HTTPS_PROXY
+else
+echo "SET"
+export HTTP_PROXY=http:://keith.driver:2-dicephonefountain-4@10.200.10.9:3128
+export HTTPS_PROXY=http:://keith.driver:2-dicephonefountain-4@10.200.10.9:3128
+fi
