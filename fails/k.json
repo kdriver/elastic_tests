@@ -1,0 +1,11 @@
+{
+  "audit_types": "any text",
+  "date_time": "Mon Nov 4 14:53:12 2019",
+  "findings": {
+    "CiscoIOS": {
+      "finding 1": {
+        "f1": "text here"
+      }
+    }
+  }
+}

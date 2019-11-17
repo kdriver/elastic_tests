@@ -2,7 +2,7 @@ import sys,requests,os,json,time,math
 from elasticsearch import Elasticsearch
 
 directory='.'
-index_name='test-syntax'
+index_name='nipper'
 
 
 if len(sys.argv) > 1 :

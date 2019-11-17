@@ -1,0 +1,15 @@
+[
+    {
+	"audit_type" : "STIG Compliance",
+        "date_time": "Mon Nov 4 14:53:12 2019",
+        "findings": {
+            "CiscoIOStree": {
+                "finding 1": {
+                    "f1": "text here"
+                },
+                "finding 2": {
+                    "f2": "text here"
+                }
+            }
+        }
+    }]

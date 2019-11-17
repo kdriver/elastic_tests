@@ -23,9 +23,9 @@ for report in js:
 		for k in y:
 			z = report['findings'][k]
 			if '-' in k:
-				print("replacing {} ".format(k),end='')
+				#print("replacing {} ".format(k),end='')
 				kk = k.replace('-','_')
-				print(kk)
+				#print(kk)
 				del report['findings'][k]
 				report['findings'][kk] =z
 			if "CiscoIOS15" == k:
@@ -36,14 +36,14 @@ for report in js:
 			for g in f:
 				finding = report['findings'][k][g]
 				if isinstance(finding,dict):
-					print(finding)
+					#print(finding)
 					for item in finding:
 						if item == '':
-							print("found null")
+							#print("found null")
 							co = finding[item]
 							report['findings'][k][g]["kdd"] = co
 							del report['findings'][k][g][item]
-				print(report['findings'][k][g])
+				#print(report['findings'][k][g])
 							
 with open("mapped.json","w") as wf:
 	json.dump(js, wf, indent=4)

@@ -93,13 +93,12 @@ for report in js:
 		response = es.index(index=index_name,ignore=400,id=i,body=report)
 		i = i + 1
 		if 'error' in response:
-			# If elastic returns an error, try to fix the problem and re-insert
-				if 'error' in response:
-						# game over - error is still there
 						print("failure")
 						print(json.dumps(report,indent=4))
 						print(json.dumps(response,indent=4))
 						print("give up")
 						exit()
+		else:
+						print(response)
 				
 					

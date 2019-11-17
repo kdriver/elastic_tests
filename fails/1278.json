@@ -1,0 +1,49 @@
+[
+    {
+        "audit_type": "STIG Compliance",
+        "check": "Review the network devices configuration to determine if administrative access to the device requires some form of authentication--at a minimum a password is required.\n\nIf passwords aren't used to administrative access to the device, this is a finding.",
+        "date_time": "Mon Nov 4 14:53:12 2019",
+        "description": "Network access control mechanisms interoperate to prevent unauthorized access and to enforce the organization's security policy. Access to the network must be categorized as administrator, user, or guest so the appropriate authorization can be assigned to the user requesting access to the network or a network device. Authorization requires an individual account identifier that has been approved, assigned, and configured on an authentication server. Authentication of user identities is accomplished through the use of passwords, tokens, biometrics, or in the case of multi-factor authentication, some combination thereof. Lack of authentication enables anyone to gain access to the network or possibly a network device providing opportunity for intruders to compromise resources within the network infrastructure.",
+        "device": {
+            "collection_ip": "",
+            "filename": "cisco-router-ios15.txt",
+            "hostname": "CiscoIOS15",
+            "manufacturer": "Cisco",
+            "model": "Router",
+            "operating_system": {
+                "name": "IOS",
+                "version": "15.0"
+            }
+        },
+        "finding_id": "V-3012",
+        "findings": {
+            "CiscoIOStree": {
+                "finding 1": {
+                    "Table 0 details the administrative interface lines configured on CiscoIOS15.": "<table> <thead> <tr> <th>Line</th> <th>Access</th> <th>Login</th> <th>Level</th> <th>Password</th> <th>Authorization</th> <th>Accounting</th> <th>Filter In</th> </tr> </thead> <tbody> <tr><td>Console</td><td>Yes</td><td>AAA Authentication</td><td>1</td><td></td><td>Off</td><td>Off</td><td></td></tr> <tr class=\"evenrow\"><td>Auxiliary</td><td>No</td><td>N/A</td><td>1</td><td></td><td>Off</td><td>Off</td><td></td></tr> <tr><td>Interface 0/0/0</td><td>Yes</td><td>AAA Authentication</td><td>1</td><td></td><td>Off</td><td>Off</td><td></td></tr> <tr class=\"evenrow\"><td><span title=\"Virtual Teletype\">VTY</span> 0 - 4</td><td>Yes</td><td>AAA Authentication</td><td>1</td><td>password</td><td>Off</td><td>Off</td><td>1</td></tr> <tr><td><span title=\"Virtual Teletype\">VTY</span> 5 - 807</td><td>Yes</td><td>AAA Authentication</td><td>1</td><td></td><td>Off</td><td>Off</td><td>1</td></tr> </tbody></table>&nbsp;<br />"
+                },
+                "finding 2": {
+                    "Table 0 details local users configured on CiscoIOS15.": "<table> <thead> <tr> <th>User</th> <th>Password</th> <th>Privilege</th> <th>Filter</th> </tr> </thead> <tbody> <tr><td>admin</td><td>(ENCRYPTED)</td><td>1</td><td></td></tr> <tr class=\"evenrow\"><td>Test</td><td>(ENCRYPTED)</td><td>1</td><td></td></tr> </tbody></table>&nbsp;<br />"
+                }
+            }
+        },
+        "fix": "Configure the network devices so it will require a password to gain administrative access to the device.",
+        "ia_controls": [
+            ""
+        ],
+        "manual": "false",
+        "message_level": "Critical",
+        "message_type": "Compliance Test Pass",
+        "product": "nipper",
+        "responsibility": "Information Assurance Officer",
+        "rule_id": "SV-3012r4_rule",
+        "severity": "CAT I",
+        "stig": {
+            "date": "2018-11-28",
+            "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_Router_Cisco_STIG_V8R32_Manual-xccdf.xml",
+            "name": "Perimeter Router Security Technical Implementation Guide Cisco"
+        },
+        "summary": "Network devices must be password protected.",
+        "title": "Network element is not password protected.",
+        "version": "NET0230",
+        "nipper_id": 1278
+    }]
