@@ -2,7 +2,7 @@ import sys,requests,os,json,time,math
 from elasticsearch import Elasticsearch
 
 directory='.'
-index_name='nipper'
+index_name='test-syntax'
 
 
 if len(sys.argv) > 1 :
@@ -35,7 +35,6 @@ query= {
     "query" : { 
         "match_all" : {} 
     },
-    "stored_fields": []
 }
 settings= {
         "settings": {
@@ -53,20 +52,21 @@ settings= {
 command="curl -H \"Content-Type: application/json\" -X POST \"http://localhost:9200/" + str(index_name)+ "/_delete_by_query\" -d '{ \"query\": { \"match_all\" : {} } }'"
 
 #delete it, or delete the documents within
-response = es.indices.delete(index=index_name,ignore=[400,404])
+#response = es.indices.delete(index=index_name,ignore=[400,404])
 
 if es.indices.exists(index=index_name):
-		os.system(command)
-		docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-		if len(docs) > 0 :
-			ids = [d['_id'] for d in docs['hits']['hits']]
-			total = len(ids)
-			print("deleting {} docs".format(total))
-			i=0
-			for id in ids:
-				es.delete(index=index_name,id=id)
-				print("deleting {} % complete".format(math.floor(i/total*100)),end='\r')
-				i=i+1
+		#os.system(command)
+		answer = es.delete_by_query(index=index_name,body=query)
+		#docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
+		#if len(docs) > 0 :
+		#	ids = [d['_id'] for d in docs['hits']['hits']]
+		#	total = len(ids)
+		#	print("deleting {} docs".format(total))
+		#	i=0
+		#	for id in ids:
+		#		es.delete(index=index_name,id=id)
+		#		print("deleting {} % complete".format(math.floor(i/total*100)),end='\r')
+		#		i=i+1
 		print("deleted")
 else:
 		response = es.indices.create(index=index_name,ignore=400, body=settings)

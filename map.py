@@ -17,7 +17,7 @@ for report in js:
 	if  'references' in report:
 		if report['references'] == ['']:
 			report['references'] = []
-	if  'findings' in report:
+	if  'findingskdd' in report:
 		x = report['findings']
 		y = list(x.keys())
 		for k in y:

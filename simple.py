@@ -3,10 +3,15 @@ from elasticsearch import Elasticsearch
 
 directory='.'
 index_name='test-syntax'
+delete_it = False
 
 
 if len(sys.argv) > 1 :
 	json_file = sys.argv[1]
+	if len(sys.argv) > 2:
+		if sys.argv[2] == "True":
+			delete_it = True
+			print("delete the index - not just the docs in it")
 else:
 	json_file = "mapped.json"
 
@@ -25,8 +30,10 @@ res = requests.get('http://localhost:9200')
 #print(res.content,end='\n')
 es = Elasticsearch([{'host':'localhost','port':'9200'}])
 #es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
-#response = es.indices.delete(index=index_name,ignore=[400,404])
-#print(response)
+if delete_it== True:
+	response = es.indices.delete(index=index_name,ignore=[400,404])
+	print(response)
+	print("deleted Index");
 
 #
 #  Delete all the documents in the index.  
@@ -35,57 +42,46 @@ es = Elasticsearch([{'host':'localhost','port':'9200'}])
 query= { 
     "query" : { 
         "match_all" : {} 
-    },
-    "stored_fields": []
+    }
 }
 settings= {
         "settings": {
                 "number_of_shards" : 1,
                 "number_of_replicas" : 0,
-		"index.mapping.depth.limit" : 50
+		"index.mapping.depth.limit" : 500,
+		"index.mapping.total_fields.limit" : 50000,
+		"index.mapping.nested_fields.limit" : 50000
         },
 	"mappings": {
 		"properties": {
 			"date_time" : { "type" : "date", "format" :    "EEE MMM d[d] HH:mm:ss yyyy" }
 		}
-	}
+}
 }
 
 if es.indices.exists(index=index_name):
-		#docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-		#answer = es.delete_by_query(index=index_name,body=query)
-		#print("deleted {} docs ins one go {}".format(len(docs),answer))
 		docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-		if len(docs) > 0 :
-			ids = [d['_id'] for d in docs['hits']['hits']]
-			total = len(ids)
-			print("deleting {} docs".format(total))
-			i=0
-			for id in ids:
-				es.delete(index=index_name,id=id)
-				print("deleting {} % complete".format(math.floor(i/total*100)),end='\r')
-				i=i+1
-		print("deleted")
+		answer = es.delete_by_query(index=index_name,body=query)
+		print("deleted {} docs ins one go {}".format(len(docs),answer))
+		#docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
+		#if len(docs) > 0 :
+	#		ids = [d['_id'] for d in docs['hits']['hits']]
+	#		total = len(ids)
+	#		print("deleting {} docs".format(total))
+	#		i=0
+	#		for id in ids:
+	#			es.delete(index=index_name,id=id)
+	#			print("deleting {} % complete".format(math.floor(i/total*100)),end='\r')
+	#			i=i+1
+	#	print("deleted")
 else:
 		response = es.indices.create(index=index_name,ignore=400, body=settings)
 		print(response)
+		print("created index")
+	
+time.sleep(5)
 
 
-#
-#   fix JSON entries that have an empty body - invalid JSON?
-#
-def fix(report,name):
-	if report[name] == ['']:
-		print("match {}  --> ".format(name),end="")
-		report[name] = []
-		response = es.index(index=index_name,ignore=400,id=i,body=report)
-		if 'error' in response:
-				print(response)
-				exit()
-		else:
-				print("fixed nipper_id {}".format(report['nipper_id']))
-
-i=0
 # FOr every document produced by Nipper
 for report in js:
 	if 'audit_type' in report: 
@@ -93,10 +89,16 @@ for report in js:
 		response = es.index(index=index_name,ignore=400,id=i,body=report)
 		i = i + 1
 		if 'error' in response:
-						print("failure")
+						print("failure to insert")
+						print("---------------------------------------------")
 						print(json.dumps(report,indent=4))
 						print(json.dumps(response,indent=4))
-						print("give up")
+						with open(str(report["nipper_id"]) + ".json","w") as ef:
+							ef.write("[\n")
+							json.dump(report, ef,indent=4)
+							ef.write("]\n")
+						print("give up : offending document written to {}.json".format(report["nipper_id"]))
+						print("---------------------------------------------")
 						exit()
 		else:
 						print(response)

@@ -2,7 +2,7 @@ import sys,requests,os,json,time,math
 from elasticsearch import Elasticsearch
 
 directory='.'
-index_name='nipper'
+index_name='test-syntax'
 
 
 if len(sys.argv) > 1 :
@@ -35,8 +35,7 @@ es = Elasticsearch([{'host':'localhost','port':'9200'}])
 query= { 
     "query" : { 
         "match_all" : {} 
-    },
-    "stored_fields": []
+    }
 }
 settings= {
         "settings": {
