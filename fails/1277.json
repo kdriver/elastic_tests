@@ -1,46 +1,46 @@
 [
-    {
-        "audit_type": "STIG Compliance",
-        "check": "Review the network device interface ACLs to verify all deny statements are logged.\n\nCisco IOS example:\ninterface FastEthernet 0/0 \ndescription external interface peering with ISP or non-DoD network\nip address 199.36.92.1 255.255.255.252\nip access-group 100 in\n\u2026\naccess-list 100 deny icmp any any fragments log\naccess-list 100 deny ip 169.254.0.0 0.0.255.255 any log\naccess-list 100 deny ip 10.0.0.0 0.255.255.255 any log\naccess-list 100 deny ip 172.16.0.0 0.15.255.255 any log\naccess-list 100 deny ip 192.168.0.0 0.0.255.255 any log\naccess-list 100 permit icmp any host 199.36.92.1 echo-reply\naccess-list 100 permit icmp any host 199.36.90.10 echo-reply\naccess-list 100 deny icmp any any log\naccess-list 100 deny ip any any log",
-        "date_time": "Mon Nov 4 14:53:12 2019",
-        "description": "Auditing and logging are key components of any security architecture.  It is essential for security personnel to know what is being done, attempted to be done, and by whom in order to compile an accurate risk assessment.  Auditing the actions on network devices provides a means to recreate an attack, or identify a configuration mistake on the device.",
-        "device": {
-            "collection_ip": "",
-            "filename": "cisco-router-ios15.txt",
-            "hostname": "CiscoIOS15",
-            "manufacturer": "Cisco",
-            "model": "Router",
-            "operating_system": {
-                "name": "IOS",
-                "version": "15.0"
-            }
-        },
-        "finding_id": "V_3000",
-        "findings": {
-            "CiscoIOS": {
-                "finding 1" : "Nipper Studio determined that no active filter rule lists containing deny rules were configured on CiscoIOS"
-            }
-        },
-        "fix": "Configure interface ACLs to log all deny statements.",
-        "ia_controls": [
-            "ECAT-1",
-            "ECAT-2",
-            "ECSC-1"
-        ],
-        "manual": "false",
-        "message_level": "Low",
-        "message_type": "Compliance Test Pass",
-        "product": "nipper",
-        "responsibility": "Information Assurance Officer",
-        "rule_id": "SV-15474r3_rule",
-        "severity": "CAT III",
-        "stig": {
-            "date": "2018-11-28",
-            "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_Router_Cisco_STIG_V8R32_Manual-xccdf.xml",
-            "name": "Perimeter Router Security Technical Implementation Guide Cisco"
-        },
-        "summary": "The network device must log all access control lists (ACL) deny statements.",
-        "title": "Interface ACL deny statements are not logged.",
-        "version": "NET1020",
-        "nipper_id": 1277
-    }]
+{
+    "audit_type": "STIG Compliance",
+    "check": "Review the network device interface ACLs to verify all deny statements are logged.\n\nCisco IOS example:\ninterface FastEthernet 0/0 \ndescription external interface peering with ISP or non-DoD network\nip address 199.36.92.1 255.255.255.252\nip access-group 100 in\n\u2026\naccess-list 100 deny icmp any any fragments log\naccess-list 100 deny ip 169.254.0.0 0.0.255.255 any log\naccess-list 100 deny ip 10.0.0.0 0.255.255.255 any log\naccess-list 100 deny ip 172.16.0.0 0.15.255.255 any log\naccess-list 100 deny ip 192.168.0.0 0.0.255.255 any log\naccess-list 100 permit icmp any host 199.36.92.1 echo-reply\naccess-list 100 permit icmp any host 199.36.90.10 echo-reply\naccess-list 100 deny icmp any any log\naccess-list 100 deny ip any any log",
+    "date_time": "Mon Nov 4 14:53:12 2019",
+    "description": "Auditing and logging are key components of any security architecture.  It is essential for security personnel to know what is being done, attempted to be done, and by whom in order to compile an accurate risk assessment.  Auditing the actions on network devices provides a means to recreate an attack, or identify a configuration mistake on the device.",
+    "device": {
+        "collection_ip": "",
+        "filename": "cisco-router-ios15.txt",
+        "hostname": "CiscoIOS15",
+        "manufacturer": "Cisco",
+        "model": "Router",
+        "operating_system": {
+            "name": "IOS",
+            "version": "15.0"
+        }
+    },
+    "finding_id": "V-3000",
+    "findings": {
+        "CiscoIOStree": {
+            "finding 1": "Nipper Studio determined that no active filter rule lists containing deny rules were configured on CiscoIOS15."
+        }
+    },
+    "fix": "Configure interface ACLs to log all deny statements.",
+    "ia_controls": [
+        "ECAT-1",
+        "ECAT-2",
+        "ECSC-1"
+    ],
+    "manual": "false",
+    "message_level": "Low",
+    "message_type": "Compliance Test Pass",
+    "product": "nipper",
+    "responsibility": "Information Assurance Officer",
+    "rule_id": "SV-15474r3_rule",
+    "severity": "CAT III",
+    "stig": {
+        "date": "2018-11-28",
+        "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_Router_Cisco_STIG_V8R32_Manual-xccdf.xml",
+        "name": "Perimeter Router Security Technical Implementation Guide Cisco"
+    },
+    "summary": "The network device must log all access control lists (ACL) deny statements.",
+    "title": "Interface ACL deny statements are not logged.",
+    "version": "NET1020",
+    "nipper_id": 1277
+}]

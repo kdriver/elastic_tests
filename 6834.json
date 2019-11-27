@@ -1,0 +1,48 @@
+[    {
+        "audit_type": "STIG Compliance",
+        "check": "Review the management connection for administrative access and verify the network device is configured to time-out the connection at 10 minutes or less of inactivity.\n\nIf the device does not terminate inactive management connections at 10 minutes or less, this is a finding.",
+        "date_time": "Fri Nov 8 13:02:02 2019",
+        "description": "Terminating an idle session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled between the managed network device and a PC or terminal server when the later has been left unattended. In addition quickly terminating an idle session will also free up resources committed by the managed network device as well as reduce the risk of a management session from being hijacked. Setting the timeout of the session to 10 minutes or less increases the level of protection afforded critical network components.",
+        "device": {
+            "collection_ip": "",
+            "filename": "Huawei_Quidway.txt",
+            "hostname": "Quidway",
+            "manufacturer": "Huawei",
+            "model": "Quidway Switch",
+            "operating_system": {
+                "name": "VRP",
+                "version": ""
+            }
+        },
+        "finding_id": "V-3014",
+        "findings": {
+            "Quidway": {
+                "finding 1": {
+                    "Table 0 details the administrative interface line connection timeout(s) configured on Quidway.": "<table> <thead> <tr> <th>Line</th> <th>Exec Timeout</th> </tr> </thead> <tbody> <tr><td><span title=\"Virtual Teletype\">VTY</span> 0 - 4</td><td>10 minutes</td></tr> </tbody></table>&nbsp;<br />"
+                },
+                "finding 2": {
+                    "kdd": "<table> <thead> <tr> <th>Service</th> <th>Timeout</th> <th>Result</th> </tr> </thead></table>&nbsp;<br />"
+                }
+            }
+        },
+        "fix": "Configure the network devices to ensure the timeout for unattended administrative access connections is no longer than 10 minutes.",
+        "ia_controls": [
+            ""
+        ],
+        "manual": "false",
+        "message_level": "Medium",
+        "message_type": "Compliance Test Pass",
+        "product": "nipper",
+        "responsibility": "Information Assurance Officer",
+        "rule_id": "SV-3014r4_rule",
+        "severity": "CAT II",
+        "stig": {
+            "date": "2018-11-27",
+            "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_L3_Switch_STIG_V8R32_Manual-xccdf.xml",
+            "name": "Perimeter L3 Switch Security Technical Implementation Guide"
+        },
+        "summary": "The network devices must timeout management connections for administrative access after 10 minutes or less of inactivity.",
+        "title": "Management connection does not timeout.",
+        "version": "NET1639",
+        "nipper_id": 6834
+    }]

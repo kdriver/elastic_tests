@@ -1,21 +1,21 @@
 import sys,requests,os,json,time,math
 from elasticsearch import Elasticsearch
+import nipper_lib
 
-directory='.'
-index_name='test-syntax'
-delete_it = False
+cla = nipper_lib.parser.parse_args()
 
-
-if len(sys.argv) > 1 :
-	json_file = sys.argv[1]
-	if len(sys.argv) > 2:
-		if sys.argv[2] == "True":
-			delete_it = True
-			print("delete the index - not just the docs in it")
+if  cla.index_name == None :
+	index_name='test-syntax'
 else:
-	json_file = "mapped.json"
+	index_name = cla.index_name
 
-i=1
+delete_it = cla.index_delete
+delete_docs = cla.docs_delete
+
+json_file = "mapped.json"
+if cla.file != None:
+	json_file = cla.file
+
 #
 #  Read in the JSON from Nipper.  The JSON has already been through map.py to fix some issues
 #
@@ -23,84 +23,56 @@ print("open {} ".format(json_file))
 with open(json_file) as fn:
 	js=json.load(fn)
 
-#
-#  Open elasticsearcj
-#
-res = requests.get('http://localhost:9200')
-#print(res.content,end='\n')
 es = Elasticsearch([{'host':'localhost','port':'9200'}])
 #es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
-if delete_it== True:
-	response = es.indices.delete(index=index_name,ignore=[400,404])
-	print(response)
-	print("deleted Index");
 
-#
-#  Delete all the documents in the index.  
-#  This is better than deleting the index, which breaks Kabana's visualisation
-#
-query= { 
-    "query" : { 
-        "match_all" : {} 
-    }
-}
-settings= {
-        "settings": {
-                "number_of_shards" : 1,
-                "number_of_replicas" : 0,
-		"index.mapping.depth.limit" : 500,
-		"index.mapping.total_fields.limit" : 50000,
-		"index.mapping.nested_fields.limit" : 50000
-        },
-	"mappings": {
-		"properties": {
-			"date_time" : { "type" : "date", "format" :    "EEE MMM d[d] HH:mm:ss yyyy" }
-		}
-}
-}
+# delete the documents in the index, optionally be deleting the index
+if delete_docs or delete_it:
+	nipper_lib.delete_contents(es,index_name,delete_it)
 
-if es.indices.exists(index=index_name):
-		docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-		answer = es.delete_by_query(index=index_name,body=query)
-		print("deleted {} docs ins one go {}".format(len(docs),answer))
-		#docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-		#if len(docs) > 0 :
-	#		ids = [d['_id'] for d in docs['hits']['hits']]
-	#		total = len(ids)
-	#		print("deleting {} docs".format(total))
-	#		i=0
-	#		for id in ids:
-	#			es.delete(index=index_name,id=id)
-	#			print("deleting {} % complete".format(math.floor(i/total*100)),end='\r')
-	#			i=i+1
-	#	print("deleted")
-else:
-		response = es.indices.create(index=index_name,ignore=400, body=settings)
-		print(response)
-		print("created index")
-	
-time.sleep(5)
-
-
+time.sleep(1)
+i=0
 # FOr every document produced by Nipper
+#js.reverse()
+if cla.repeat:
+	print("repeat insert the same doc {} times".format(cla.repeat))
+	report=js[0]
+	while i < cla.repeat:
+		response = es.index(index=index_name,ignore=400,body=report)
+		if 'error' in response:
+			print("\nfailure to insert")
+			print("---------------------------------------------")
+			print(json.dumps(report,indent=4))
+			print(json.dumps(response,indent=4))
+			exit()
+		else:
+				i = i + 1
+				print(".",end='',flush=True)
+				if (i % 100) == 0:
+					print(i,end='')
+	print("\n")
+	res= es.count(index=index_name,body={'query':{'match_all':{}}})
+	print("There are now {} docs in the index".format(res['count']))
+	exit()
+
 for report in js:
 	if 'audit_type' in report: 
 		#Insert it into Elastic
-		response = es.index(index=index_name,ignore=400,id=i,body=report)
+		response = es.index(index=index_name,ignore=400,body=report)
 		i = i + 1
 		if 'error' in response:
-						print("failure to insert")
-						print("---------------------------------------------")
-						print(json.dumps(report,indent=4))
-						print(json.dumps(response,indent=4))
-						with open(str(report["nipper_id"]) + ".json","w") as ef:
-							ef.write("[\n")
-							json.dump(report, ef,indent=4)
-							ef.write("]\n")
-						print("give up : offending document written to {}.json".format(report["nipper_id"]))
-						print("---------------------------------------------")
-						exit()
+				print("failure to insert")
+				print("---------------------------------------------")
+				print(json.dumps(report,indent=4))
+				print(json.dumps(response,indent=4))
+				with open(str(report["nipper_id"]) + ".json","w") as ef:
+					ef.write("[\n")
+					json.dump(report, ef,indent=4)
+					ef.write("]\n")
+				print("give up : offending document written to {}.json".format(report["nipper_id"]))
+				print("---------------------------------------------")
+				exit()
 		else:
-						print(response)
-				
-					
+				print(response)
+
+

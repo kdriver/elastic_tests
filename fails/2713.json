@@ -1,0 +1,49 @@
+[
+{
+    "audit_type": "STIG Compliance",
+    "check": "Review the network devices configuration to determine if administrative access to the device requires some form of authentication--at a minimum a password is required.\n\nIf passwords aren't used to administrative access to the device, this is a finding.",
+    "date_time": "Mon Nov 25 20:02:29 2019",
+    "description": "Network access control mechanisms interoperate to prevent unauthorized access and to enforce the organization's security policy. Access to the network must be categorized as administrator, user, or guest so the appropriate authorization can be assigned to the user requesting access to the network or a network device. Authorization requires an individual account identifier that has been approved, assigned, and configured on an authentication server. Authentication of user identities is accomplished through the use of passwords, tokens, biometrics, or in the case of multi-factor authentication, some combination thereof. Lack of authentication enables anyone to gain access to the network or possibly a network device providing opportunity for intruders to compromise resources within the network infrastructure.",
+    "device": {
+        "collection_ip": "",
+        "filename": "3com5500.txt",
+        "hostname": "5500-EI",
+        "manufacturer": "3COM",
+        "model": "5500 Series Switch",
+        "operating_system": {
+            "name": "SS4",
+            "version": "5500-EI"
+        }
+    },
+    "finding_id": "V-3012",
+    "findings": {
+        "5500-EI": {
+            "finding 1": {
+                "Table 0 details the administrative interface lines configured on 5500-EI.": "<table> <thead> <tr> <th>Line</th> <th>Access</th> <th>Login</th> <th>Level</th> <th>Password</th> </tr> </thead> <tbody> <tr><td>Auxiliary</td><td>Yes</td><td>Local Users</td><td>1</td><td></td></tr> <tr class=\"evenrow\"><td><span title=\"Virtual Teletype\">VTY</span> 0 - 4</td><td>Yes</td><td>Local Users</td><td>1</td><td></td></tr> </tbody></table>&nbsp;<br />"
+            },
+            "finding 2": {
+                "Table 0 details local users configured on 5500-EI.": "<table> <thead> <tr> <th>User</th> <th>Password</th> <th>Privilege</th> </tr> </thead> <tbody> <tr><td>super (level 3)</td><td>password</td><td>3</td></tr> <tr class=\"evenrow\"><td>admin</td><td></td><td>0</td></tr> <tr><td>andy</td><td></td><td>0</td></tr> </tbody></table>&nbsp;<br />"
+            }
+        }
+    },
+    "fix": "Configure the network devices so it will require a password to gain administrative access to the device.",
+    "ia_controls": [
+        ""
+    ],
+    "manual": "false",
+    "message_level": "Critical",
+    "message_type": "Compliance Test Pass",
+    "product": "nipper",
+    "responsibility": "Information Assurance Officer",
+    "rule_id": "SV-3012r4_rule",
+    "severity": "CAT I",
+    "stig": {
+        "date": "2018-11-27",
+        "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Perimeter_L3_Switch_STIG_V8R32_Manual-xccdf.xml",
+        "name": "Perimeter L3 Switch Security Technical Implementation Guide"
+    },
+    "summary": "Network devices must be password protected.",
+    "title": "Network element is not password protected.",
+    "version": "NET0230",
+    "nipper_id": 2713
+}]

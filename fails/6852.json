@@ -1,0 +1,44 @@
+[
+{
+    "audit_type": "STIG Compliance",
+    "check": "Review device configuration for key expirations of 180 days or less.\n\nIf rotating keys are not configured to expire at 180 days or less, this is a finding.",
+    "date_time": "Fri Nov 8 13:02:20 2019",
+    "description": "If the keys used for routing protocol authentication are guessed, the malicious user could create havoc within the network by advertising incorrect routes and redirecting traffic. Changing the keys frequently reduces the risk of them eventually being guessed. When configuring authentication for routing protocols that provide key chains, configure two rotating keys with overlapping expiration dates, both with 180-day or less expirations.",
+    "device": {
+        "collection_ip": "",
+        "filename": "Juniper_SRX_10.txt",
+        "hostname": "Office-Juniper-SRX",
+        "manufacturer": "Juniper",
+        "model": "SRX Firewall",
+        "operating_system": {
+            "name": "JUNOS",
+            "version": "10.0R3.10"
+        }
+    },
+    "finding_id": "V-14667",
+    "findings": {
+        "Office-Juniper-SRX": {
+            "finding 1": "Nipper Studio determined that there are no routing keys configured on Office-Juniper-SRX"
+        }
+    },
+    "fix": "Configure the device so rotating keys expire at 180 days or less.",
+    "ia_controls": [
+        ""
+    ],
+    "manual": "false",
+    "message_level": "Low",
+    "message_type": "Compliance Test Pass",
+    "product": "nipper",
+    "responsibility": "",
+    "rule_id": "SV-15301r4_rule",
+    "severity": "CAT III",
+    "stig": {
+        "date": "2017-12-07",
+        "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Firewall_STIG_V8R25_Manual-xccdf.xml",
+        "name": "Firewall Security Technical Implementation Guide"
+    },
+    "summary": "Network devices must be configured with rotating keys used for authenticating IGP peers that have a duration of 180 days or less.",
+    "title": "Key expiration exceeds 180 days.",
+    "version": "NET0422",
+    "nipper_id": 6852
+}]

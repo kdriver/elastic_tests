@@ -1,0 +1,44 @@
+[
+{
+    "audit_type": "STIG Compliance",
+    "check": "Have the firewall admin verify telnet is not enabled on the firewall and is not listening on port 23.\n\nIf telnet is enabled on the firewall or the firewall is listening on port 23, this is a finding.",
+    "date_time": "Fri Nov 8 13:02:26 2019",
+    "description": "Telnet is an unencrypted service which can be easily exploited, especially when used over a public network such as the internet. With telnet enabled on the firewall, an attacker may be able to send spoofed packets through the firewall and consume the firewall\u2019s memory, causing a denial of service on the device. Telnet service is vulnerable to many exploits which can compromise the network device if enabled.",
+    "device": {
+        "collection_ip": "",
+        "filename": "Palo_Alto_PanOS_7.xml",
+        "hostname": "PA-200",
+        "manufacturer": "Palo Alto",
+        "model": "Firewall",
+        "operating_system": {
+            "name": "PANOS",
+            "version": "7.0.0"
+        }
+    },
+    "finding_id": "V-72881",
+    "findings": {
+        "device": {
+            "finding 1": "Nipper Studio determined that telnet was enabled on PA-200"
+        }
+    },
+    "fix": "Disable telnet and verify the firewall is not listening to port 23.",
+    "ia_controls": [
+        ""
+    ],
+    "manual": "false",
+    "message_level": "Medium",
+    "message_type": "Compliance Test Fail",
+    "product": "nipper",
+    "responsibility": "",
+    "rule_id": "SV-87533r1_rule",
+    "severity": "CAT II",
+    "stig": {
+        "date": "2017-12-07",
+        "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Firewall_STIG_V8R25_Manual-xccdf.xml",
+        "name": "Firewall Security Technical Implementation Guide"
+    },
+    "summary": "The firewall must not be listening for telnet service.",
+    "title": "Firewall is listening for telnet service.",
+    "version": "NET0378",
+    "nipper_id": 6859
+}]

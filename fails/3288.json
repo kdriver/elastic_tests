@@ -1,0 +1,46 @@
+[
+{
+    "audit_type": "STIG Compliance",
+    "check": "Review the management connection for administrative access and verify the network device is configured to time-out the connection at 10 minutes or less of inactivity.\n\nIf the device does not terminate inactive management connections at 10 minutes or less, this is a finding.",
+    "date_time": "Mon Nov 25 20:22:30 2019",
+    "description": "Terminating an idle session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled between the managed network device and a PC or terminal server when the later has been left unattended. In addition quickly terminating an idle session will also free up resources committed by the managed network device as well as reduce the risk of a management session from being hijacked. Setting the timeout of the session to 10 minutes or less increases the level of protection afforded critical network components.",
+    "device": {
+        "collection_ip": "",
+        "filename": "Juniper_SRX_10.txt",
+        "hostname": "Office-Juniper-SRX",
+        "manufacturer": "Juniper",
+        "model": "SRX Firewall",
+        "operating_system": {
+            "name": "JUNOS",
+            "version": "10.0R3.10"
+        }
+    },
+    "finding_id": "V-3014",
+    "findings": {
+        "Office-Juniper-SRX": {
+            "finding 1": {
+                "kdd": "<table> <thead> <tr> <th>Service</th> <th>Timeout</th> <th>Result</th> </tr> </thead> <tbody> <tr><td>Connection Timeout</td><td>No timeout</td><td>FAIL</td></tr> </tbody></table>&nbsp;<br />"
+            }
+        }
+    },
+    "fix": "Configure the network devices to ensure the timeout for unattended administrative access connections is no longer than 10 minutes.",
+    "ia_controls": [
+        ""
+    ],
+    "manual": "false",
+    "message_level": "Medium",
+    "message_type": "Compliance Test Fail",
+    "product": "nipper",
+    "responsibility": "Information Assurance Officer",
+    "rule_id": "SV-3014r4_rule",
+    "severity": "CAT II",
+    "stig": {
+        "date": "2017-12-07",
+        "file": "C:/Program Files/NipperStudio/resources/STIG/U_Network_Firewall_STIG_V8R25_Manual-xccdf.xml",
+        "name": "Firewall Security Technical Implementation Guide"
+    },
+    "summary": "The network devices must timeout management connections for administrative access after 10 minutes or less of inactivity.",
+    "title": "Management connection does not timeout.",
+    "version": "NET1639",
+    "nipper_id": 3288
+}]
