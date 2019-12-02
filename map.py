@@ -19,7 +19,7 @@ for report in js:
 			report['references'] = []
 	if 'finding' in report:
 		f = report['finding']
-		if 'tableisthere' in f:
+		if 'table' in f:
 			del report['finding']['table']
 			report['finding']['table'] = "replaced recursive table"
 
@@ -52,5 +52,29 @@ for report in js:
 				#print(report['findings'][k][g])
 							
 with open("log1_mapped.json","w") as wf:
-	json.dump(js, wf, indent=4)
+	for report in js:
+		the_s = json.dumps(report)
+		wf.write(the_s + '\n')
+	wf.close()
+
+with open("10.json","w") as wf:
+	for index in range(0 , 10):
+		the_s = json.dumps(js[index])
+		wf.write(the_s + '\n')
+	wf.close()
+
+with open("1000.json","w") as wf:
+	for index in range(0 , 1000):
+		the_s = json.dumps(js[index])
+		wf.write(the_s + '\n')
+	wf.close()
+
+with open("2000.json","w") as wf:
+	for index in range(0 , 2000):
+		the_s = json.dumps(js[index])
+		wf.write(the_s + '\n')
+	wf.close()
+
+
+#	json.dump(js, wf, indent=0)
 	
