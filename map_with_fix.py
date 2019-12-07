@@ -67,20 +67,23 @@ def dump_files(skip):
 		wf.close()
 	with open("10.json","a") as wf:
 		for index in range(0 , 10):
+			report = js[index]
 			if report_it(report,skip) :
-				the_s = json.dumps(js[index])
+				the_s = json.dumps(report)
 				wf.write(the_s + '\n')
 		wf.close()
 	with open("1000.json","a") as wf:
 		for index in range(0 , 1000):
+			report = js[index]
 			if report_it(report,skip) :
-				the_s = json.dumps(js[index])
+				the_s = json.dumps(report)
 				wf.write(the_s + '\n')
 		wf.close()
 	with open("2000.json","a") as wf:
 		for index in range(0 , 2000):
+			report = js[index]
 			if report_it(report,skip) :
-				the_s = json.dumps(js[index])
+				the_s = json.dumps(report)
 				wf.write(the_s + '\n')
 		wf.close()
 	with open("log1_formatted.json","a") as wf:

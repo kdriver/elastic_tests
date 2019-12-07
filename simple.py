@@ -4,7 +4,7 @@ import nipper_lib
 
 cla = nipper_lib.parser.parse_args()
 
-if  cla.index_name == None :
+if  cla.index_name is None :
 	index_name='test-syntax'
 else:
 	index_name = cla.index_name
@@ -13,7 +13,7 @@ delete_it = cla.index_delete
 delete_docs = cla.docs_delete
 
 json_file = "mapped.json"
-if cla.file != None:
+if cla.file is not None:
 	json_file = cla.file
 
 #
