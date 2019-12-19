@@ -23,8 +23,13 @@ print("open {} ".format(json_file))
 with open(json_file) as fn:
 	js=json.load(fn)
 
-es = Elasticsearch([{'host':'localhost','port':'9200'}])
+#es = Elasticsearch([{'host':'localhost','port':'9200'}])
+es = Elasticsearch(["https://https://a3564804ce99495a9b10ade54bf11653.us-east-1.aws.found.io"],httpauth=('keith','simple'),port=9243)
+print(es.info())
 #es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
+
+if not es.ping():
+	raise ValueError("Can't connect to Elastic")
 
 # delete the documents in the index, optionally be deleting the index
 if delete_docs or delete_it:
