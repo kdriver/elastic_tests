@@ -16,20 +16,39 @@ json_file = "mapped.json"
 if cla.file is not None:
 	json_file = cla.file
 
+NDJSON=1
+NORMAL=2
+filetype=NDJSON
+
+#JSON can be in an array, or newline delimited. Test to see which
+with open(json_file) as fn:
+	first = fn.readline()
+	if first[0] == '[':
+		filetype = NORMAL
+	fn.close()
 #
 #  Read in the JSON from Nipper.  The JSON has already been through map.py to fix some issues
 #
 print("open {} ".format(json_file))
+js=[]
 with open(json_file) as fn:
-	js=json.load(fn)
+	if filetype == NORMAL:
+		js=json.load(fn)
+	else:
+		for line in fn:
+			json_object = json.loads(line)
+			js = js + [json_object]
+print("read in {} json file ok\n".format(filetype)
 
 #es = Elasticsearch([{'host':'localhost','port':'9200'}])
-es = Elasticsearch(["https://https://a3564804ce99495a9b10ade54bf11653.us-east-1.aws.found.io"],httpauth=('keith','simple'),port=9243)
+es = Elasticsearch(["https://keith:simple@a3564804ce99495a9b10ade54bf11653.us-east-1.aws.found.io:9243"],httpauth=('keith','simple'),port=9243)
 print(es.info())
 #es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
 
 if not es.ping():
 	raise ValueError("Can't connect to Elastic")
+else:
+	print("connected to elastic")
 
 # delete the documents in the index, optionally be deleting the index
 if delete_docs or delete_it:
