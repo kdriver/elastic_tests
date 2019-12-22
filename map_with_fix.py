@@ -3,11 +3,19 @@ import requests,os,json,time,uuid
 directory='.'
 i=1
 
+#open the source logfile from nipper - coded so a list of jason files can be processed, but we only take in 1
 for filename in os.listdir(directory):
 	if filename.endswith('log1.json'):
 		with open(filename) as fn:
 			js=json.load(fn)
 i=1000
+
+
+#for each JSON record
+
+#replace attributes tha have an empty array specified [""]
+#replace a very deep recursive table structure
+#within a recird search findings where we have empty attribute names items in a dictionary
 for report in js:
 	report['nipper_id'] = i
 	i = i + 1
@@ -51,6 +59,7 @@ for report in js:
 							report['findings'][k][g]["kdd"] = co
 							del report['findings'][k][g][item]
 							
+#a small function to facilitate skipping a defined finding id so that we get different results in separate runs
 def report_it(report,skip):
 	answer = True
 	if  'finding_id' in report:
@@ -58,6 +67,8 @@ def report_it(report,skip):
 			answer = False
 	return answer
 
+# a function to dump out the output in different formats ( formatted and ndjson ) and to have some with 10,1000,2000 records in them  for debuggig
+# all files are appended to, hence the need to delete this scriots previous runs files explicity
 def dump_files(skip):
 	with open("log1_mapped.json","a") as wf:
 		for report in js:
@@ -89,10 +100,12 @@ def dump_files(skip):
 	with open("log1_formatted.json","a") as wf:
 		json.dump(js, wf, indent=4)
 	
+#delete a filename - checking that it exists first 
 def delete_it(filename):
 	if os.path.exists(filename):	
 		os.remove(filename)
 
+#delete all files this script generates before we regenerate them
 delete_it("log1_mapped.json")
 delete_it("10.json")
 delete_it("100.json")
@@ -100,16 +113,23 @@ delete_it("1000.json")
 delete_it("2000.json")
 delete_it("log1_formatted.json")
 
+#a UUID to uniquly identify this run
 session_uuid = str(uuid.uuid4())
 print(session_uuid)
+#for every report in the original add the UUID and some text
 for report in js:
 	report['nipper_session'] = session_uuid
 	report['nipper_text'] = "Research Network first audit" 
+
+#dump the output, but dont skip any finding
 dump_files("")
 session_uuid = str(uuid.uuid4())
 print(session_uuid)
+#for every report in the original add  a different UUID and text. This simulates a second audit
 for report in js:
 	report['nipper_text'] = "Research Network second audit" 
 	report['nipper_session'] = session_uuid
+
+#dump the files , skipping a finding ID
 dump_files("V-3062")
 
