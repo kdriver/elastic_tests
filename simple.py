@@ -20,12 +20,32 @@ if cla.file is not None:
 #
 #  Read in the JSON from Nipper.  The JSON has already been through map.py to fix some issues
 #
-print("open {} ".format(json_file))
+NDJSON=1
+NORMAL=2
+filetype=NDJSON
+
+#JSON can be in an array, or newline delimited. Test to see which
 with open(json_file) as fn:
-	js=json.load(fn)
+    first = fn.readline()
+    if first[0] == '[':
+        filetype = NORMAL
+    fn.close()
+#
+#  Read in the JSON from Nipper.  The JSON has already been through map.py to fix some issues
+#
+print("open {} ".format(json_file))
+js=[]
+with open(json_file) as fn:
+    if filetype == NORMAL:
+        js=json.load(fn)
+    else:
+        for line in fn:
+            json_object = json.loads(line)
+            js = js + [json_object]
+print("read in {} json file ok\n".format(filetype))
 
 #es = Elasticsearch([{'host':'localhost','port':'9200'}])
-es = Elasticsearch([elastic_creds.host],httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
+es = Elasticsearch(elastic_creds.host,httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
 print(es.info())
 #es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
 
