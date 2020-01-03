@@ -1,14 +1,21 @@
 import requests,os,json,time,uuid
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f","--file",default="log1.json")
+parser.add_argument("-t","--twice",action='store_true',default=False)
+cla = parser.parse_args()
+print(cla)
 
 directory='.'
 i=1
 
 #open the source logfile from nipper - coded so a list of jason files can be processed, but we only take in 1
 for filename in os.listdir(directory):
-	if filename.endswith('log1.json'):
+	if filename.endswith(cla.file):
 		with open(filename) as fn:
 			js=json.load(fn)
-i=1000
+i=0
 
 
 #for each JSON record
@@ -30,7 +37,7 @@ for report in js:
 		if 'table' in f:
 			del report['finding']['table']
 			report['finding']['table'] = "replaced recursive table"
-	if 'summary' in report:
+	if 'isummary' in report:
 		co = report['summary'][0]
 		report['summary'] = co
 
@@ -123,13 +130,17 @@ for report in js:
 
 #dump the output, but dont skip any finding
 dump_files("")
-session_uuid = str(uuid.uuid4())
-print(session_uuid)
-#for every report in the original add  a different UUID and text. This simulates a second audit
-for report in js:
-	report['nipper_text'] = "Research Network second audit" 
-	report['nipper_session'] = session_uuid
 
-#dump the files , skipping a finding ID
-dump_files("V-3062")
+skip_finding="V-3062"
+if cla.twice == True:
+	print('Dump again with missing finding ID {}'.format(skip_finding))
+	session_uuid = str(uuid.uuid4())
+	print(session_uuid)
+	#for every report in the original add  a different UUID and text. This simulates a second audit
+	for report in js:
+		report['nipper_text'] = "Research Network second audit" 
+		report['nipper_session'] = session_uuid
+
+	#dump the files , skipping a finding ID
+	dump_files(skip_finding)
 

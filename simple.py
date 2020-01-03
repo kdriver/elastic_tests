@@ -1,5 +1,6 @@
 import sys,requests,os,json,time,math
 from elasticsearch import Elasticsearch
+import copy 
 import nipper_lib
 import elastic_creds
 
@@ -10,10 +11,10 @@ if  cla.index_name is None :
 else:
 	index_name = cla.index_name
 
-delete_it = cla.index_delete
-delete_docs = cla.docs_delete
+delete_it = cla.delete_index
+delete_docs = cla.delete_docs
 
-json_file = "mapped.json"
+json_file = "log1_mapped.json"
 if cla.file is not None:
 	json_file = cla.file
 
@@ -44,10 +45,9 @@ with open(json_file) as fn:
             js = js + [json_object]
 print("read in {} json file ok\n".format(filetype))
 
-#es = Elasticsearch([{'host':'localhost','port':'9200'}])
 es = Elasticsearch(elastic_creds.host,httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
 print(es.info())
-#es = Elasticsearch(['http://elastic:changeme@192.168.0.113:9200'])
+
 
 if not es.ping():
 	raise ValueError("Can't connect to Elastic")
@@ -59,7 +59,7 @@ if delete_docs or delete_it:
 time.sleep(1)
 i=0
 # FOr every document produced by Nipper
-#js.reverse()
+
 if cla.repeat:
 	print("repeat insert the same doc {} times".format(cla.repeat))
 	report=js[0]
@@ -81,24 +81,66 @@ if cla.repeat:
 	print("There are now {} docs in the index".format(res['count']))
 	exit()
 
+# apply some fixes
+def kdd_fixit(report,response):
+	answer = True
+	if 'findings' in reason:
+		fix = report['findings']	
+		#print(json.dumps(fix,indent=4))
+		#replace the 'findings' entry with one named 'finding_list'
+		report['finding_list'] = fix
+		item = list(fix.keys())[0]
+		#findings=list(fix[item].keys())
+		#for f in findings:
+		#	content = fix[item][f]
+		#	fix[item]['finding'] = content
+		#	del fix[item][f]
+		#and delete the child item ( usually the hostname string) content and replace it with text to say we've changed it.
+		del fix[item]
+		fix[item] = 'replaced by fixit'
+		del report['findings']
+	
+	response = es.index(index=index_name,ignore=400,body=report)
+	if 'error' in response:
+		answer = False
+		print('Failed to fix it ')
+	else:
+		print(response)
+	return answer
+
+def dump_error_file(report,filename):
+		if  os.path.exists(filename):
+			print('file {} already exists - do not overwrite'.format(filename))
+		else:
+			with open(filename,"w") as ef:
+					ef.write("[\n")
+					json.dump(report, ef,indent=4)
+					ef.write("]\n")
+
 for report in js:
 	if 'audit_type' in report: 
 		#Insert it into Elastic
 		response = es.index(index=index_name,ignore=400,body=report)
-		i = i + 1
 		if 'error' in response:
-				print("failure to insert")
+				a_copy = copy.deepcopy(report)
+				print("failure to insert {} ".format(report["nipper_id"]))
 				print("---------------------------------------------")
-				print(json.dumps(report,indent=4))
-				print(json.dumps(response,indent=4))
-				with open(str(report["nipper_id"]) + ".json","w") as ef:
-					ef.write("[\n")
-					json.dump(report, ef,indent=4)
-					ef.write("]\n")
-				print("give up : offending document written to {}.json".format(report["nipper_id"]))
-				print("---------------------------------------------")
-				exit()
+				#print(json.dumps(response,indent=4))
+				reason = response['error']['root_cause'][0]['reason']
+				print(reason)
+				if kdd_fixit(report,reason) == False:
+					print(json.dumps(report,indent=4))
+					error_filename = str("errors/") + str(report["nipper_id"]) + ".json"
+					dump_error_file(report,error_filename)
+					print("give up : offending document written to {}.json".format(report["nipper_id"]))
+					print("---------------------------------------------")
+					exit()
+				else:
+					a_copy['error_report'] = reason
+					error_filename = str("errors/") + str("fixed_") + str(report["nipper_id"]) + ".json"
+					dump_error_file(a_copy,error_filename)
+					print('Fixed it')
 		else:
 				print(response)
-
+		i = i + 1
 

@@ -4,8 +4,9 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file")
 parser.add_argument("-n","--index_name")
-parser.add_argument("-i","--index_delete",action="store_true")
-parser.add_argument("-d","--docs_delete",action="store_true")
+parser.add_argument("-i","--delete_index",action="store_true")
+parser.add_argument("-d","--delete_docs",action="store_true")
+parser.add_argument("-o","--once",action="store_true")
 parser.add_argument("-r","--repeat",type=int,default=0)
 
 query= { 
@@ -33,8 +34,8 @@ settings = {
             "number_of_shards": 1,
             "number_of_replicas": 0,
             "mapping.depth.limit": 500,
-		    "index.mapping.total_fields.limit" : 50000,
-		    "index.mapping.nested_fields.limit" : 50000
+		    "mapping.total_fields.limit" : 50000,
+		    "mapping.nested_fields.limit" : 50000
         }
     },
     "mappings": {
