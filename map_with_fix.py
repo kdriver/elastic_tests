@@ -6,11 +6,18 @@ parser.add_argument("-f","--file",default="log1.json")
 parser.add_argument("-t","--twice",action='store_true',default=False)
 cla = parser.parse_args()
 print(cla)
+import copy
+
+def delete_it(filename):
+	if os.path.exists(filename):	
+		os.remove(filename)
 
 directory='.'
-i=1
 
 #open the source logfile from nipper - coded so a list of jason files can be processed, but we only take in 1
+delete_it("fix_list.json")
+fixes = open("fix_list.json","w")
+
 for filename in os.listdir(directory):
 	if filename.endswith(cla.file):
 		with open(filename) as fn:
@@ -23,23 +30,36 @@ i=0
 #replace attributes tha have an empty array specified [""]
 #replace a very deep recursive table structure
 #within a recird search findings where we have empty attribute names items in a dictionary
+
+delete_it("log1_original_nd.json")
+org = open("log1_original_nd.json","w") 
+i=0
 for report in js:
+	unmodified = copy.deepcopy(report)
 	report['nipper_id'] = i
+	the_s = json.dumps(report)
+	org.write(the_s + '\n')
+
 	i = i + 1
+	fix_list=[]
 	if  'advisories' in report:
 		if report['advisories'] == ['']:
 			report['advisories'] = []
+			fix_list = fix_list + ["advisories"]
 	if  'references' in report:
 		if report['references'] == ['']:
 			report['references'] = []
+			fix_list = fix_list + ["references"]
 	if 'finding' in report:
 		f = report['finding']
 		if 'table' in f:
 			del report['finding']['table']
 			report['finding']['table'] = "replaced recursive table"
-	if 'isummary' in report:
+			fix_list = fix_list + ["replaced recursive table"]
+	if 'sssummary' in report:
 		co = report['summary'][0]
 		report['summary'] = co
+		fix_list = fix_list + ["summary"]
 
 	if  'findings' in report:
 		#x = report['findings']
@@ -65,6 +85,15 @@ for report in js:
 							co = finding[item]
 							report['findings'][k][g]["kdd"] = co
 							del report['findings'][k][g][item]
+							fix_list = fix_list + ["replaced null finding name"]
+	if len(fix_list) > 0:
+		print("{} fixed {} ".format(i-1,fix_list))
+		report['nipper_fix_list'] = fix_list
+		debugit = [ unmodified, report ]
+		fixes.write(json.dumps(debugit,indent=4))
+	
+fixes.close()
+org.close()
 							
 #a small function to facilitate skipping a defined finding id so that we get different results in separate runs
 def report_it(report,skip):
