@@ -52,9 +52,7 @@ print(es.info())
 if not es.ping():
 	raise ValueError("Can't connect to Elastic")
 
-# delete the documents in the index, optionally be deleting the index
-if delete_docs or delete_it:
-	nipper_lib.delete_contents(es,index_name,delete_it)
+nipper_lib.initialise_index(es,index_name,delete_it,delete_docs)
 
 time.sleep(1)
 i=0
@@ -83,6 +81,8 @@ if cla.repeat:
 
 # apply some fixes
 def kdd_fixit(report,response):
+	if cla.dont_fix:
+		return False
 	answer = True
 	if 'findings' in reason:
 		fix = report['findings']	
@@ -128,6 +128,7 @@ for report in js:
 				#print(json.dumps(response,indent=4))
 				reason = response['error']['root_cause'][0]['reason']
 				print(reason)
+				print(response)
 				if kdd_fixit(report,reason) == False:
 					print(json.dumps(report,indent=4))
 					error_filename = str("errors/") + str(report["nipper_id"]) + ".json"

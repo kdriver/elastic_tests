@@ -42,26 +42,26 @@ for report in js:
 
 	i = i + 1
 	fix_list=[]
-	if  'advisories' in report:
+	if  'never_advisories' in report:
 		if report['advisories'] == ['']:
 			report['advisories'] = []
 			fix_list = fix_list + ["advisories"]
-	if  'references' in report:
+	if  'never_references' in report:
 		if report['references'] == ['']:
 			report['references'] = []
 			fix_list = fix_list + ["references"]
-	if 'finding' in report:
+	if 'never_finding' in report:
 		f = report['finding']
 		if 'table' in f:
 			del report['finding']['table']
 			report['finding']['table'] = "replaced recursive table"
 			fix_list = fix_list + ["replaced recursive table"]
-	if 'sssummary' in report:
+	if 'never_summary' in report:
 		co = report['summary'][0]
 		report['summary'] = co
 		fix_list = fix_list + ["summary"]
 
-	if  'findings' in report:
+	if  'never_findings' in report:
 		#x = report['findings']
 		#y = list(x.keys())
 		#for k in y:
