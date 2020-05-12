@@ -10,9 +10,16 @@ settings = {
     },
     "mappings": {
         "properties": {
+		    "location" : {
+			      "type" : "geo_point"
+				  },
             "date_time": {
                 "type": "date",
                 "format": "EEE MMM d[d] HH:mm:ss yyyy"
+            },
+            "epoch": {
+                "type": "date",
+				"format": "epoch_second"
             },
 			"references": {
 				"type" : "object",
@@ -45,6 +52,24 @@ settings = {
                 }
             },
             "fix": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 8192
+                    }
+                }
+            },
+            "solution_command": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 8192
+                    }
+                }
+            },
+            "solution_data": {
                 "type": "text",
                 "fields": {
                     "keyword": {

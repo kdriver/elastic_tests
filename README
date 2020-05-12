@@ -1,0 +1,34 @@
+A set of utilities to load Nipper output into Elastic.
+
+start_elk.bat     - a utility to start containerised elastic and kibana on windows
+log1.json         - the JSON file emitted by nipper
+map_with_fix.py   - python3 map_with_fix.py  [ --twice ]
+	                takes log1.json and inserts some identity fileds per reocrd ( an id, a uuid and some text ) and also allows the output to be generate twice , the second time removing some of the errors to show differences between two runs. This script used to fix the json output by nipper, bu no, elstic inseretion errors are masked in the settings by not indexing those attributes
+create_index.py   - python3 create_index [ --index_name=name] 
+                    creates a new elastic index with the mappings defined in index_settings.py
+nipper_lib.py     - utilities used by simple.py
+elastic_creds.py  - This fie contains the credentials to access a local or remote elastic instance. This file must be created as it is not stored in github. example below
+
+		local=True
+		user='keith'
+		password='Titania'
+		host=["https://hostname.com"]
+		port=9243
+simple.py         - a utility to load data into elastic 
+                 - simple.py -f filname.json [ --index_name=name] [--delete_index] [--delete_docs] [ --dont_fix ]
+				eg  python3  simple.py -f 10.json --index_name=nipper --delete_index
+					this will delete any existing index named nipper, then create a new one ( with the settings in index_settings.py
+
+
+errors   - a directory where any json documentsthat cant be inserted into elastic are dumped
+fix_list.json      - an output of the map_with_fix listing what has been done to the json records
+index_settings.py  - the parameters needed to create the Elastic index. Some parameters are exteded for long records, the time format is described and some attributes are not indexed to prevent isertion errors
+l.conf       - a logstash configuration file to allow 'cat log1_mapped.json' | logstash -f l.conf '  into a preexisting index created with create_index.py
+nipper_kibana_dashboard.ndjson   - exported from kibana , this dashboard will display nipper data inserted into an index called nipper
+
+10.json         - output of map_with_fix.py - just 10 records
+1000.json       - output of map_with_fix.py - just 1000 records
+2000.json       - output of map_with_fix.py - just 2000 records
+log1_formatted.json - output of map_with_fix.py - all of the records - human readable 
+log1_mapped.json    -  output of map_with_fix.py - all of the rercords ndjson 
+log1_original_nd.json  - log1.json formatted as ndjson  ( i.e. no extra id records inserted or fixes applied ) 

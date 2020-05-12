@@ -32,10 +32,13 @@ def initialise_index(es,index_name,delete_it,delete_docs):
                 print("deleted Index");
                 create_index(es,index_name)
             else:
-                print("Delete the documents in the index")
-                docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
-                answer = es.delete_by_query(index=index_name,body=query)
-                print("deleted {} docs in one go {}".format(len(docs),answer))
+                if delete_docs == True:
+                     print("Delete the documents in the index")
+                     docs = es.search(index=index_name,filter_path=['hits.hits._id'],size=10000,body=query)
+                     answer = es.delete_by_query(index=index_name,body=query)
+                     print("deleted {} docs in one go {}".format(len(docs),answer))
+                else:
+                     print("Index exists - do nothing")
     else:
              create_index(es,index_name)
         

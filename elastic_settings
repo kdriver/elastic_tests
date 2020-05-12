@@ -8,6 +8,9 @@
     },
     "mappings": {
         "properties": {
+		"location" : {
+		                  "type" : "geo_point"
+			},
             "date_time": {
                 "type": "date",
                 "format": "EEE MMM d[d] HH:mm:ss yyyy"

@@ -7,7 +7,7 @@ import elastic_creds
 cla = nipper_lib.parser.parse_args()
 
 if  cla.index_name is None :
-	index_name='test-syntax'
+	index_name='nipper'
 else:
 	index_name = cla.index_name
 
@@ -43,7 +43,7 @@ with open(json_file) as fn:
         for line in fn:
             json_object = json.loads(line)
             js = js + [json_object]
-print("read in {} json file ok\n".format(filetype))
+print("read in {} json file ok with {} objects\n".format(filetype,len(js)))
 
 es = Elasticsearch(elastic_creds.host,httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
 print(es.info())
@@ -118,7 +118,7 @@ def dump_error_file(report,filename):
 					ef.write("]\n")
 
 for report in js:
-	if 'audit_type' in report: 
+#	if 'audit_type' in report: 
 		#Insert it into Elastic
 		response = es.index(index=index_name,ignore=400,body=report)
 		if 'error' in response:
