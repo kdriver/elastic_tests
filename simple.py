@@ -5,6 +5,9 @@ import nipper_lib
 import elastic_creds
 import certifi
 
+import warnings
+warnings.simplefilter("ignore")
+
 cla = nipper_lib.parser.parse_args()
 
 if  cla.index_name is None :
