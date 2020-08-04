@@ -3,6 +3,7 @@ from elasticsearch import Elasticsearch
 import copy 
 import nipper_lib
 import elastic_creds
+import certifi
 
 cla = nipper_lib.parser.parse_args()
 
@@ -45,7 +46,9 @@ with open(json_file) as fn:
             js = js + [json_object]
 print("read in {} json file ok with {} objects\n".format(filetype,len(js)))
 
-es = Elasticsearch(elastic_creds.host,httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
+#es = Elasticsearch(elastic_creds.host,httpauth=(elastic_creds.user,elastic_creds.password),port=elastic_creds.port)
+es = Elasticsearch(elastic_creds.host, use_ssl=True,verify_certs=False,ca_certs=certifi.where())
+
 print(es.info())
 
 
@@ -54,59 +57,10 @@ if not es.ping():
 
 nipper_lib.initialise_index(es,index_name,delete_it,delete_docs)
 
-time.sleep(1)
 i=0
 # FOr every document produced by Nipper
 
-if cla.repeat:
-	print("repeat insert the same doc {} times".format(cla.repeat))
-	report=js[0]
-	while i < cla.repeat:
-		response = es.index(index=index_name,ignore=400,body=report)
-		if 'error' in response:
-			print("\nfailure to insert")
-			print("---------------------------------------------")
-			print(json.dumps(report,indent=4))
-			print(json.dumps(response,indent=4))
-			exit()
-		else:
-				i = i + 1
-				print(".",end='',flush=True)
-				if (i % 100) == 0:
-					print(i,end='')
-	print("\n")
-	res= es.count(index=index_name,body={'query':{'match_all':{}}})
-	print("There are now {} docs in the index".format(res['count']))
-	exit()
-
 # apply some fixes
-def kdd_fixit(report,response):
-	if cla.dont_fix:
-		return False
-	answer = True
-	if 'findings' in reason:
-		fix = report['findings']	
-		#print(json.dumps(fix,indent=4))
-		#replace the 'findings' entry with one named 'finding_list'
-		report['finding_list'] = fix
-		item = list(fix.keys())[0]
-		#findings=list(fix[item].keys())
-		#for f in findings:
-		#	content = fix[item][f]
-		#	fix[item]['finding'] = content
-		#	del fix[item][f]
-		#and delete the child item ( usually the hostname string) content and replace it with text to say we've changed it.
-		del fix[item]
-		fix[item] = 'replaced by fixit'
-		del report['findings']
-	
-	response = es.index(index=index_name,ignore=400,body=report)
-	if 'error' in response:
-		answer = False
-		print('Failed to fix it ')
-	else:
-		print(response)
-	return answer
 
 def dump_error_file(report,filename):
 		if  os.path.exists(filename):
@@ -122,25 +76,12 @@ for report in js:
 		#Insert it into Elastic
 		response = es.index(index=index_name,ignore=400,body=report)
 		if 'error' in response:
-				a_copy = copy.deepcopy(report)
 				print("failure to insert {} ".format(report["nipper_id"]))
 				print("---------------------------------------------")
 				#print(json.dumps(response,indent=4))
 				reason = response['error']['root_cause'][0]['reason']
 				print(reason)
 				print(response)
-				if kdd_fixit(report,reason) == False:
-					print(json.dumps(report,indent=4))
-					error_filename = str("errors/") + str(report["nipper_id"]) + ".json"
-					dump_error_file(report,error_filename)
-					print("give up : offending document written to {}.json".format(report["nipper_id"]))
-					print("---------------------------------------------")
-					exit()
-				else:
-					a_copy['error_report'] = reason
-					error_filename = str("errors/") + str("fixed_") + str(report["nipper_id"]) + ".json"
-					dump_error_file(a_copy,error_filename)
-					print('Fixed it')
 		else:
 				print(response)
 		i = i + 1
